@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  # changes the keys in backend-config configmap from url to DB_URL and db to USERNAME
+  name: configured-pod
+  namespace: ckad2
+spec:
+  containers:
+  - image: nginx:1.19.0
+    name: app
+    env:
+    - name: DB_URL
+      valueFrom:
+        configMapKeyRef:
+          name: backend-config
+          key:  url
+    - name: USERNAME
+      valueFrom:
+        configMapKeyRef:
+          name: backend-config
+          key: db

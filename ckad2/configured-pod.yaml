@@ -1,20 +1,17 @@
 apiVersion: v1
 kind: Pod
 metadata:
+  ## mounts backedn-config configmap as a volume and creates files for each key in configmap in /etc/hosts
   name: configured-pod
   namespace: ckad2
 spec:
   containers:
   - image: nginx:1.19.0
     name: app
-    env:
-    - name: DB_URL
-      valueFrom:
-        configMapKeyRef:
-          name: backend-config
-          key:  url
-    - name: USERNAME
-      valueFrom:
-        configMapKeyRef:
-          name: backend-config
-          key: db
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/config
+  volumes:
+  - name: config-volume
+    configMap:
+      name: backend-config
