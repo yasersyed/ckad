@@ -7,6 +7,14 @@ spec:
   containers:
   - image: nginx:1.19.0
     name: app
-    envFrom:
-    - configMapRef:
-        name: backend-config
+    env:
+    - name: DB_URL
+      valueFrom:
+        configMapKeyRef:
+          name: backend-config
+          key:  url
+    - name: USERNAME
+      valueFrom:
+        configMapKeyRef:
+          name: backend-config
+          key: db
