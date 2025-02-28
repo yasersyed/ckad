@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: ckad2
+data:
+  db: staging
+  url:  jdbc://someurl:5432
