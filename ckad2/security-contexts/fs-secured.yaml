@@ -9,6 +9,13 @@ spec:
   containers:
   - image: nginx:1.18.0
     name: secured-container
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 512m
+      limits:
+        cpu: 1
+        memory: 1024m
     volumeMounts:
     - name: data-volume
       mountPath: /data/app
