@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: consumer
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.18.0
+      volumeMounts:
+        - name: secret-volume
+          mountPath: /var/app
+          readOnly: true
+      env:
+        - name: API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: ext-service-configmap
+              key: api_endpoint
+        - name: USER_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: ext-service-configmap
+              key: username
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: ext-service-secret
