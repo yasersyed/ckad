@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: complex-pod
+spec:
+  containers:
+    - image: nginx
+      name: complex-pod
+      ports:
+        - containerPort: 80
+  initContainers:
+    - name: configurer
+      image: busybox
+      command: ['sh', '-c', 'wget -O- google.com']
+    
