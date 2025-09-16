@@ -1,0 +1,8 @@
+--add a label
+k label pod labeled-pod region=eu
+
+--overwrite a label
+k label pod labeled-pod region=us --overwrite
+
+--delete a label with minus sign
+k label pod labeled-pod region-
