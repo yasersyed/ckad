@@ -1,0 +1,10 @@
+# Like lables we can add annotations to live primitives
+
+1) adding a new annotation
+k annotate pod annotated-pod oncall='800-555-1111'
+
+2) overwriting an annotation
+k annotate pod annotated-pod oncall='800-555-1234' --overwrite
+
+3) deleting with minus sign
+k annotate pod annotated-pod oncall-

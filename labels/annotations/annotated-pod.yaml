@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotated-pod
+  annotations:
+    commit: abcd123
+    author: 'Syed Yaser'
+    branch: 'main'
+spec:
+  containers:
+    - image: nginx:1.25.1
+      name: nginx
