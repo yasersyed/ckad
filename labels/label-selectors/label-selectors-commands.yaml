@@ -1,0 +1,9 @@
+-- using -l
+-- we can select with key,value pair as shown in example 1
+-- or using a set as shown in example 2
+-- or using combination of both as shown in example 3.
+k get pods -l env=prod --show-labels
+k get pods -l 'team in (shiny,legacy)' --show-labels
+k get pods -l 'team in (shiny,legacy)', app=v1.2.4 --show-labels
+
+using --show-labels option you can display labels in the pods
