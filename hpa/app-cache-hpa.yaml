@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: "2025-09-19T04:34:37Z"
+  name: app-cache
+  namespace: default
+  resourceVersion: "1417740"
+  uid: a2eac6fe-9840-4f53-a9b9-bdfed981e859
+spec:
+  maxReplicas: 5
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-cache
+  targetCPUUtilizationPercentage: 80
+status:
+  currentReplicas: 0
+  desiredReplicas: 0
