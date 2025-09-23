@@ -1,15 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-serer
+  name: web-server
 spec:
   replicas: 4
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 40%
-      maxSurge: 10%
-  minReadySeconds: 60
+    type: Recreate
   selector:
     matchLabels:
       app: httpd
@@ -22,9 +18,5 @@ spec:
         - name: httpd
           image: httpd:2.4.23-alpine
           ports:
-          - containerPort: 80
-            protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
+            - containerPort: 80
+              protocol: TCP
