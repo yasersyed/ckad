@@ -4,7 +4,7 @@ metadata:
   name: web-server
 spec:
   selector:
-      type: blue
+      type: green
   ports:
     - protocol: TCP
       port: 80
