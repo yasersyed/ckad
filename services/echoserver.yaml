@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: echoserver
+  name: echoserver
+spec:
+  containers:
+  - image: k8s.gcr.io/echoserver:1.10
+    imagePullPolicy: IfNotPresent
+    name: echoserver
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+  restartPolicy: Never
