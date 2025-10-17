@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: "2025-10-17T04:11:31Z"
+  labels:
+    kubernetes.io/metadata.name: internal-tools
+  name: internal-tools
+  resourceVersion: "1506653"
+  uid: a235db74-ee60-4c0f-b0ee-456b9f21452e
+spec:
+  finalizers:
+  - kubernetes
+status:
+  phase: Active
