@@ -1,0 +1,10 @@
+k create namespace development                                                                                 │
+k create namespace staging                                                                                     │
+k create namespace production                                                                                  │
+k run app --image=nginx:latest --namespace=development --restart=Never                                         │
+k run app --image=nginx:latest --namespace=staging --restart=Never                                             │
+k run app --image=nginx:latest --namespace=production --restart=Never
+k get namespaces                                                                                               │
+k delete namespace development                                                                                 │
+k delete namespace staging                                                                                     │
+k delete namespace production
