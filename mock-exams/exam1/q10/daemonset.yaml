@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-monitor
+  labels:
+    app: node-monitor
+spec:
+  selector:
+    matchLabels:
+      app: node-monitor
+  template:
+    metadata:
+      labels:
+        app: node-monitor
+    spec:
+      # Node selector - only runs on nodes with this label
+      nodeSelector:
+        monitoring: enabled
+      
+      # Tolerations allow the pod to run on tainted nodes
+      tolerations:
+      # Tolerate the master/control-plane taint (if you want to run on master nodes)
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      # Tolerate the deprecated master taint
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      # Tolerate nodes that are not ready
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+        effect: NoExecute
+      # Tolerate nodes that are unreachable
+      - key: node.kubernetes.io/unreachable
+        operator: Exists
+        effect: NoExecute
+      
+      containers:
+      - name: monitor
+        image: busybox:latest
+        command:
+        - watch
+        - -n
+        - "5"
+        - date
+        resources:
+          limits:
+            memory: 50Mi
+            cpu: 50m
+          requests:
+            memory: 20Mi
+            cpu: 20m
