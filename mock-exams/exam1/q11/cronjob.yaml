@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: batch-cron
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      completions: 3
+      parallelism: 2
+      template:
+        spec:
+          containers:
+            - name: batch-process
+              image: busybox:latest
+              command:
+                - /bin/sh
+                - -c
+                - 'echo "Processing data..." && sleep 10 && echo "Done"'
+          restartPolicy: Never
+      backoffLimit: 3
+
