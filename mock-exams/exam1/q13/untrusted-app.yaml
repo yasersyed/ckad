@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: untrusted-app
+  labels:
+    app: untrusted
+spec:
+  containers:
+    - name: busybox 
+      image: busybox:latest
+      command: ["sleep", "3600"]
+
