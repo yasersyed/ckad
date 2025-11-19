@@ -1,0 +1,143 @@
+# Answer for Question 14: Debugging and Logging
+
+# ============================================================================
+# Step 1: Create a pod that deliberately fails
+# ============================================================================
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-pod
+spec:
+  containers:
+  - name: app
+    image: nginx:invalid-tag  # Non-existent image tag
+    command: ["sleep", "3600"]
+
+# Apply it:
+# kubectl apply -f crash-pod.yaml
+
+# ============================================================================
+# Step 2: Troubleshooting Commands and Steps
+# ============================================================================
+
+# 1. Check pod status
+kubectl get pods
+# Output: crash-pod   0/1   ImagePullBackOff   0   2m
+
+# 2. Describe the pod (MOST IMPORTANT for debugging)
+kubectl describe pod crash-pod
+# Look for:
+# - Events section at bottom (shows errors)
+# - Status and Conditions
+# - Container statuses
+
+# Example output will show:
+# Events:
+#   Warning  Failed     Failed to pull image "nginx:invalid-tag": rpc error: code = Unknown desc = Error response from daemon: manifest for nginx:invalid-tag not found
+
+# 3. Check logs (if container started)
+kubectl logs crash-pod
+# If pod never started, this returns: "Error from server (BadRequest): container "app" in pod "crash-pod" is waiting to start: image can't be pulled"
+
+# 4. Get events for the pod
+kubectl get events --field-selector involvedObject.name=crash-pod --sort-by='.lastTimestamp'
+
+# 5. Get pod YAML to see full configuration
+kubectl get pod crash-pod -o yaml
+
+# ============================================================================
+# Step 3: Fix the pod
+# ============================================================================
+
+# Delete the broken pod
+kubectl delete pod crash-pod
+
+# Create fixed version
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-pod
+spec:
+  containers:
+  - name: app
+    image: nginx:latest  # Fixed: valid image tag
+    command: ["nginx", "-g", "daemon off;"]
+
+# Apply and verify
+# kubectl apply -f crash-pod-fixed.yaml
+# kubectl get pods
+# Output: crash-pod   1/1   Running   0   10s
+
+# ============================================================================
+# Common Failure Scenarios and Solutions
+# ============================================================================
+
+# Scenario 1: ImagePullBackOff
+# Problem: Invalid image name/tag
+# Debug: kubectl describe pod <name> | grep -A 5 Events
+# Fix: Correct the image name/tag
+
+# Scenario 2: CrashLoopBackOff
+# Problem: Container starts but exits immediately
+# Debug: kubectl logs <pod> and kubectl logs <pod> --previous
+# Fix: Fix application code or command
+
+# Scenario 3: Pending
+# Problem: Cannot be scheduled (resources, node selector, etc.)
+# Debug: kubectl describe pod <name> | grep -A 5 Events
+# Fix: Adjust resources or node selectors
+
+# Scenario 4: Error/CreateContainerConfigError
+# Problem: ConfigMap or Secret doesn't exist
+# Debug: kubectl describe pod <name>
+# Fix: Create missing ConfigMap/Secret
+
+# ============================================================================
+# Quick Debugging Cheat Sheet
+# ============================================================================
+
+# Get pod status
+kubectl get pod <name>
+
+# Detailed information (ALWAYS START HERE)
+kubectl describe pod <name>
+
+# View logs (current container)
+kubectl logs <name>
+
+# View logs (previous crashed container)
+kubectl logs <name> --previous
+
+# View logs (specific container in multi-container pod)
+kubectl logs <name> -c <container-name>
+
+# Follow logs in real-time
+kubectl logs -f <name>
+
+# Get events
+kubectl get events --sort-by='.lastTimestamp'
+
+# Get pod YAML
+kubectl get pod <name> -o yaml
+
+# Execute command in pod
+kubectl exec <name> -- <command>
+
+# Interactive shell
+kubectl exec -it <name> -- sh
+
+# Check resource usage
+kubectl top pod <name>
+
+# ============================================================================
+# Troubleshooting Steps Summary
+# ============================================================================
+
+# 1. Check status: kubectl get pods
+# 2. Describe pod: kubectl describe pod <name>
+# 3. Check events: Look at Events section in describe output
+# 4. View logs: kubectl logs <name>
+# 5. Get YAML: kubectl get pod <name> -o yaml
+# 6. Fix issue: Delete and recreate with correct configuration
+# 7. Verify: kubectl get pods (should show Running)
