@@ -34,8 +34,10 @@ Then create a pod named `config-reader` that mounts this ConfigMap as a volume a
 ## Question 3: Init Containers
 
 Create a pod named `web-app` with:
-- An init container named `setup` using `busybox` that creates a file `/work-dir/initialized.txt` with content "Setup Complete"
-- A main container named `web` using `nginx` that mounts the same volume at `/usr/share/nginx/html`
+- An init container named `setup` using `busybox` that creates a file 
+    `/work-dir/initialized.txt` with content "Setup Complete"
+- A main container named `web` using `nginx` that mounts the same volume 
+    at `/usr/share/nginx/html`
 - Use an `emptyDir` volume named `workdir`
 
 Verify that the init container completes before the main container starts.
