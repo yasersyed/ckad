@@ -1,3 +1,7 @@
+-- quickly create deployment
+k create deployment api-server --image=nginx:1.19 -│
+-replicas=4 -o yaml > api-server.yaml
+
 -- set the right version
 k set image deployments/api-server nginx=nginx:1.20
 
