@@ -1,0 +1,10 @@
+-- set the right version
+k set image deployments/api-server nginx=nginx:1.20
+
+-- set the wrong tag
+k set image deployments/api-server nginx=nginx:1.21-wrong
+# check the rollout status with
+k rollout status deployment/api-server
+
+-- undo rollout
+k rollout undo deployment/api-server
