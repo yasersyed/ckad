@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2025-11-26T05:19:17Z"
+  name: app-sa
+  namespace: default
+  resourceVersion: "17788"
+  uid: 2cd06014-c4ea-4bc2-ae34-e1c777af4c45
