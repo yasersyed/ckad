@@ -1,0 +1,2 @@
+## to start a manual job from a cronjob run the following command:
+# k create job backup-manual --from=cronjob/backup-job
