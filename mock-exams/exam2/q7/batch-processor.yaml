@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: batch-processor
+spec:
+  template:
+    spec:
+      containers:
+        - name: pi
+          image: perl:5.34
+          command: [ "perl" ,"-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  completions: 5
+  backoffLimit: 4
+  parallelism: 2
+  activeDeadlineSeconds: 100
