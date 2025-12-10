@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: background-app
+  name: background-app
+  namespace: dev-team
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: background-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: background-app
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources:
+          requests:
+            cpu: "0.5"
+            memory: 512Mi
+      priorityClassName: low-priority
+status: {}
