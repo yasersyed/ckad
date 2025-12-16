@@ -42,7 +42,8 @@ Certified Kubernetes Application Developer Exam Preparation
 - Resource requests: memory=64Mi, cpu=100m
 - Resource limits: memory=128Mi, cpu=200m
 
-**Question 6:** Create a DaemonSet named log-collector that runs on all nodes except the master. Use image: fluent/fluent-bit:latest and label: app=logging.
+**Question 6:** Create a DaemonSet named log-collector that runs on all nodes except the master. 
+Use image: fluent/fluent-bit:latest and label: app=logging.
 
 **Question 7:** Create a CronJob named backup-db that:
 - Runs every day at 2 AM (0 2 * * *)
