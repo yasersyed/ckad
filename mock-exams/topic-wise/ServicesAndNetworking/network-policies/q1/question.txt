@@ -1,0 +1,11 @@
+Question 1: Basic Path-Based Routing
+Create an Ingress named web-ingress in namespace default:
+
+Host: example.com
+Path /api → service api-svc on port 8080
+Path / → service frontend-svc on port 80
+Use annotation: nginx.ingress.kubernetes.io/rewrite-target: /
+
+
+--to create imperatively, /api* makes it pathType=Prefix, without * pathType=exact. always use prefix unless asked otherwise in ckad exam
+k create ingress web-ingress --rule="example.com/api*=api-svc:8080" --rule="example.com/=frontend-svc:80" --dry-run=client -o yaml > web-ingress1.yaml
