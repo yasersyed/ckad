@@ -1,0 +1,15 @@
+Question 5: Multiple Paths
+Create an Ingress named store-ingress:
+
+Host: store.com
+/products → product-svc:8080
+/orders → order-svc:8080
+/users → user-svc:8080
+
+
+1. Created with this imperative command
+	k create ingress store-ingress \ 
+		--rule="store.com/products*=product-svc:8080" \ 
+		--rule="store.com/orders*=order-svc:8080" \
+		--rule="store.com/users*=user-svc:8080" \
+		--dry-run=client -o yaml > store-ingress.yaml

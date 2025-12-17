@@ -1,0 +1,7 @@
+Question 8: Ingress with Annotations
+Create Ingress rate-limited with:
+
+Host: api.example.com
+Backend: api-svc:8080
+Add annotation for rate limiting: 
+	nginx.ingress.kubernetes.io/limit-rps: "10"

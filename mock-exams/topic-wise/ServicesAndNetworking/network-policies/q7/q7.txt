@@ -1,0 +1,5 @@
+Question 7: Update Existing Ingress
+Update ingress web-ingress to add a new path:
+
+Add path /v2 → service api-v2-svc:8080
+Keep existing paths intact

@@ -1,0 +1,30 @@
+Question 6: Troubleshooting
+An Ingress exists but traffic isn't reaching the backend:
+
+Verify Ingress configuration
+Check if services and endpoints exist
+Test backend pod connectivity directly
+Verify ingress controller is running
+
+Troubleshooting commands:
+
+# 1. Verify Ingress configuration
+kubectl get ingress broken-ingress
+kubectl describe ingress broken-ingress
+
+# 2. Check if service exists
+kubectl get svc api-svc
+
+# 3. Check service endpoints (are pods registered?)
+kubectl get endpoints api-svc
+
+# 4. Check if pods are running
+kubectl get pods -l app=api
+
+# 5. Test backend pod directly
+kubectl port-forward pod/api-pod-xxx 8080:8080
+curl localhost:8080
+
+# 6. Check ingress controller is running
+kubectl get pods -n ingress-nginx
+	
