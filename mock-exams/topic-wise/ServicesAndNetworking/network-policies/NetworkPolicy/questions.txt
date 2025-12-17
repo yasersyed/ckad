@@ -1,0 +1,67 @@
+CKAD NetworkPolicy Practice Questions
+Question 1: Deny All Ingress
+Create a NetworkPolicy named deny-all in namespace prod that denies all incoming traffic to all pods.
+Question 2: Allow from Specific Pods
+Create a NetworkPolicy named backend-policy that:
+
+Applies to pods with label app=backend
+Allows ingress from pods with label app=frontend on port 8080
+Denies all other ingress traffic
+
+Question 3: Allow from Specific Namespace
+Create a NetworkPolicy named db-access that:
+
+Applies to pods with label app=database
+Allows ingress only from pods in namespace app-namespace on port 3306
+Denies all other traffic
+
+Question 4: Egress Control
+Create a NetworkPolicy named frontend-egress that:
+
+Applies to pods with label app=frontend
+Allows egress to pods with label app=backend on port 8080
+Allows egress to DNS (port 53 UDP)
+Denies all other egress
+
+Question 5: Multiple Port Rules
+Create a NetworkPolicy named web-policy that:
+
+Applies to pods with label tier=web
+Allows ingress on port 80 and 443 from any pod
+Denies all other ingress
+
+Question 6: Namespace + Pod Selector
+Create a NetworkPolicy named api-policy that:
+
+Applies to pods with label app=api
+Allows ingress from pods with label role=backend in namespace services
+Allows ingress from pods with label role=admin in any namespace
+Denies all other traffic
+
+Question 7: Default Deny Egress
+Create a NetworkPolicy named deny-egress in namespace secure that denies all outgoing traffic 
+from all pods.
+Question 8: Allow Specific IP Block
+Create a NetworkPolicy named external-access that:
+
+Applies to pods with label app=web
+Allows ingress from CIDR block 192.168.1.0/24 on port 80
+Denies ingress from 192.168.1.5/32 (exception)
+
+Question 9: Ingress and Egress Combined
+Create a NetworkPolicy named full-policy that:
+
+Applies to pods with label app=microservice
+Allows ingress from pods with label app=frontend on port 8080
+Allows egress to pods with label app=database on port 5432
+Allows egress to DNS
+
+Question 10: Troubleshooting
+A NetworkPolicy exists but pods can't communicate. Debug by:
+
+Checking if CNI plugin supports NetworkPolicies
+Verifying pod labels match policy selectors
+Testing connectivity before/after applying policy
+Checking policy rules syntax
+
+These match CKAD difficulty - you need to write valid NetworkPolicy YAML quickly.

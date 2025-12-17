@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-policy
+spec:
+  podSelectors:
+    matchLabels:
+      app: api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            role: backend
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: services
+    - from:
+      - podSelector:
+          matchLabels:
+            role: admin 
+
