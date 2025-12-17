@@ -1,0 +1,6 @@
+Question 2: Host-Based Routing
+Create an Ingress named multi-host:
+
+app1.example.com → service app1-svc:8080
+app2.example.com → service app2-svc:9090
+Both paths are /

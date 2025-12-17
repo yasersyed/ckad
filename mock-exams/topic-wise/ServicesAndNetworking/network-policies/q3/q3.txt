@@ -1,0 +1,16 @@
+Create an Ingress with TLS termination:
+
+Name: secure-ingress
+Host: secure.example.com
+Use Secret tls-cert for TLS
+
+Backend: service web-svc on port 443
+
+1. I used this to create cert and key and used it in the secret
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \\n  -keyout tls.key -out tls.crt \\n  -subj "/CN=secure.example.com/O=myorg
+
+2. created secret using this command
+k create secret tls tls-secret --cert=tls.crt --key=tls.key --dry-run=client -o yaml > tls-cert.yam
+
+3. created ingress using this command
+k create ingress secure-ingress --rule="secure.example.com/*=web-svc:443,tls=tls-cert" --dry-run=client -o yaml > secure-ingress.yam
