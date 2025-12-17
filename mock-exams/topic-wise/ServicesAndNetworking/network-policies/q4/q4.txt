@@ -1,0 +1,12 @@
+Question 4: Default Backend
+Create an Ingress with:
+
+Name: app-ingress
+Host: myapp.com, path /app → service app-svc:8080
+Default backend for all other paths → service default-svc:80	
+
+
+1. Create ingress with defaultBackend service
+k create ingress app-ingress --default-backend=default-svc:80 \
+	--rule="myapp.com/app*=app-svc:8080" --dry-run=client \
+	-o yaml > app-ingres.yaml
