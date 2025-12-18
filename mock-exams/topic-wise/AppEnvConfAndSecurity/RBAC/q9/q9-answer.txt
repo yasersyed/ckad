@@ -1,0 +1,9 @@
+# Can ServiceAccount app-sa create pods in namespace default?
+k auth can-i create pods --as=system:serviceaccount:production:app-sa
+
+# Can user john delete deployments in namespace prod?
+k auth can-i delete deployments --as=user=john
+
+# Can current user list secrets in all namespaces?
+k auth can-i list secrets -A
+k auth can-i list secrets --all-namespaces

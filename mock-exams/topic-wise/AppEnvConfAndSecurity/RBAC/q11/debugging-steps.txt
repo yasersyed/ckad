@@ -1,0 +1,22 @@
+Debugging Steps
+bash# 1. Check if ServiceAccount exists
+kubectl get serviceaccount app-sa -n default
+
+# 2. Check if Role exists
+kubectl get role -n default
+kubectl describe role <role-name> -n default
+
+# 3. Check if RoleBinding exists
+kubectl get rolebinding -n default
+kubectl describe rolebinding <binding-name> -n default
+
+# 4. Verify RoleBinding references correct Role and ServiceAccount
+kubectl get rolebinding <binding-name> -n default -o yaml
+
+# 5. Check permissions with kubectl auth can-i
+kubectl auth can-i list services \
+  --as system:serviceaccount:default:app-sa \
+  -n default
+
+# 6. View detailed info
+kubectl describe rolebinding <binding-name> -n default
