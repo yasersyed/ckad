@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restart-job
+spec:
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - command: ["sh"]
+        args:
+          - -c
+          - cat test.txt && touch test.txt
+        image: busybox
+        name: restart-job
+        resources: {}
+      restartPolicy: OnFailure 
+status: {}

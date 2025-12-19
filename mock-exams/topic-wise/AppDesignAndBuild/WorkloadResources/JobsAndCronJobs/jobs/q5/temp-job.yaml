@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: temp-job
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - command: ["sh", "-c", "echo Done"]
+        image: busybox
+        name: temp-job
+        resources: {}
+      restartPolicy: Never
+status: {}

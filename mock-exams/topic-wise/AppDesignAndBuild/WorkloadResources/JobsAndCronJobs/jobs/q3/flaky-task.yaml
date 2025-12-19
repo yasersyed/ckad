@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: flaky-task 
+spec:
+  backoffLimit: 4
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - command: ["sh", "-c", "exit 1"]
+        image: busybox
+        name: flaky-task 
+        resources: {}
+      restartPolicy: Never
+status: {}

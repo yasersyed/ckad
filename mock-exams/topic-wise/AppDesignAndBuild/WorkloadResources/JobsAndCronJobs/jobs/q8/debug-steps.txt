@@ -1,0 +1,16 @@
+# check job status
+k get jobs
+k describe job failed-job
+
+# check pod status
+k get pods --selector=job-name=failed-job
+k logs pod pod-name
+k describe pod pod-name
+k logs pod pod-name --previous
+k get events --field-selector involvedObject.name=backup-db
+
+# fix job
+- could be bad image
+- could be bad command
+- could be backoffLimit exceeded
+

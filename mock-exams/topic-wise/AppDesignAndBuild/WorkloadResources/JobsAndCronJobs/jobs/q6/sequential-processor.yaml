@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sequential-processor
+spec:
+  parallelism: 1
+  completions: 5
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - command: ["sh","-c", "echo 'Task $HOSTNAME' && sleep 5"]
+        image: busybox
+        name: sequential-processor
+        resources: {}
+      restartPolicy: Never
+status: {}

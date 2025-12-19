@@ -1,0 +1,58 @@
+Find and Delete Completed Jobs
+bash# 1. List all Jobs in namespace batch
+kubectl get jobs -n batch
+
+# 2. Find completed Jobs (status.successful=1)
+kubectl get jobs -n batch --field-selector status.successful=1
+
+# 3. Delete all completed Jobs
+kubectl delete jobs -n batch --field-selector status.successful=1
+
+# 4. Verify Jobs are deleted
+kubectl get jobs -n batch
+Alternative Methods
+Delete specific completed Job
+bash# Delete single Job
+kubectl delete job <job-name> -n batch
+
+# Job deletion automatically deletes associated pods
+Delete without deleting pods first (keep pods temporarily)
+bash# Delete Job but leave pods (orphan pods)
+kubectl delete job <job-name> -n batch --cascade=orphan
+
+# List orphaned pods
+kubectl get pods -n batch
+
+# Clean up pods later
+kubectl delete pods -l job-name=<job-name> -n batch
+Delete all Jobs (completed and failed)
+bash# Delete all Jobs in namespace
+kubectl delete jobs --all -n batch
+Delete only failed Jobs
+bash# Find failed Jobs
+kubectl get jobs -n batch --field-selector status.failed=1
+
+# Delete failed Jobs
+kubectl delete jobs -n batch --field-selector status.failed=1
+Clean Up Associated Pods
+bash# 1. Find pods from deleted Jobs
+kubectl get pods -n batch --show-labels
+
+# 2. Delete pods by label
+kubectl delete pods -l job-name=<job-name> -n batch
+
+# 3. Delete all completed pods
+kubectl delete pods -n batch --field-selector status.phase=Succeeded
+
+# 4. Delete all failed pods
+kubectl delete pods -n batch --field-selector status.phase=Failed
+Complete Cleanup Script
+bash# Delete all completed Jobs and their pods
+kubectl delete jobs -n batch --field-selector status.successful=1
+
+# Delete all failed Jobs and their pods
+kubectl delete jobs -n batch --field-selector status.failed=1
+
+# Verify cleanup
+kubectl get jobs -n batch
+kubectl get pods -n batch

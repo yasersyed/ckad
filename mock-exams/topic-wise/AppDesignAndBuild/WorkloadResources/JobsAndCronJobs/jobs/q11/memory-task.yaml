@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: memory-task
+spec:
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - image: stress
+        name: memory-task
+        command: ["sh"]
+        args:
+          - -c
+          - stress --vm 1 --vm-bytes 256M --timeout 30s 
+        resources: 
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+      restartPolicy: Never
+status: {}
