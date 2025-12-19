@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-import
+spec:
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - command: [ "sh", "-c", "echo 'Processing data' && sleep 30" ]
+        image: busybox
+        name: data-import
+        resources: {}
+      restartPolicy: Never
+status: {}

@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: batch-processor
+spec:
+  parallelism: 5
+  completions: 10
+  template:
+    metadata: {}
+    spec:      
+      containers:
+      - command: ["sh", "-c", "echo 'Batch $HOSTNAME' && sleep 10"]
+        image: busybox
+        name: batch-processor
+        resources: {}
+      restartPolicy: Never
+status: {}
