@@ -1,0 +1,64 @@
+# Answer to Question 9: Create Job from CronJob (Imperative)
+
+## Using kubectl create job
+
+```bash
+# Create Job from existing CronJob
+kubectl create job <job-name> --from=cronjob/<cronjob-name>
+
+# Example:
+kubectl create job manual-backup --from=cronjob/backup-cronjob
+
+# With specific namespace
+kubectl create job manual-backup --from=cronjob/backup-cronjob -n production
+```
+
+## Complete Example
+
+```bash
+# 1. List existing CronJobs
+kubectl get cronjobs
+
+# 2. Create Job from CronJob
+kubectl create job backup-now --from=cronjob/daily-backup
+
+# 3. Monitor the Job
+kubectl get job backup-now -w
+
+# 4. Check logs
+kubectl logs job/backup-now -f
+
+# 5. Verify completion
+kubectl get job backup-now
+```
+
+## Create CronJob First (if needed), Then Job
+
+```bash
+# Create a CronJob
+kubectl create cronjob daily-backup \
+  --image=mysql:8.0 \
+  --schedule="0 2 * * *" \
+  -- sh -c "mysqldump mydb"
+
+# Create manual Job from it
+kubectl create job manual-backup --from=cronjob/daily-backup
+
+# Run immediately without waiting for schedule
+```
+
+## View CronJob Spec Before Creating Job
+
+```bash
+# View CronJob to understand what Job will do
+kubectl get cronjob daily-backup -o yaml
+
+# Create Job from it
+kubectl create job backup-$(date +%s) --from=cronjob/daily-backup
+```
+
+**Key points:**
+- `--from=cronjob/<name>` creates Job using CronJob's template
+- Job runs immediately (doesn't wait for schedule)
+- Job inherits container spec, env vars, volumes from CronJob
+- Useful for testing CronJob or running it on-demand

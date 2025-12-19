@@ -1,0 +1,142 @@
+# Answer to Question 12: Monitor Job Progress
+
+## Create the Job
+
+```bash
+# Create a sample Job to monitor
+kubectl create job monitor-test \
+  --image=busybox \
+  -- sh -c "for i in 1 2 3 4 5; do echo 'Processing task $i'; sleep 5; done"
+```
+
+## Monitor Job Progress
+
+### 1. Check Job Status
+```bash
+# View Job status
+kubectl get job monitor-test
+
+# Output shows:
+# NAME           COMPLETIONS   DURATION   AGE
+# monitor-test   0/1           10s        10s
+
+# Watch Job status in real-time
+kubectl get job monitor-test -w
+
+# When complete shows:
+# NAME           COMPLETIONS   DURATION   AGE
+# monitor-test   1/1           30s        35s
+```
+
+### 2. Watch Pod Creation
+```bash
+# Watch pods being created
+kubectl get pods -l job-name=monitor-test -w
+
+# Or watch all pods
+kubectl get pods -w
+```
+
+### 3. View Logs in Real-Time
+```bash
+# Follow logs as they're written
+kubectl logs job/monitor-test -f
+
+# Or from specific pod
+kubectl logs <pod-name> -f
+
+# View logs from all containers
+kubectl logs -l job-name=monitor-test -f
+```
+
+### 4. Detailed Job Status
+```bash
+# Describe Job for detailed info
+kubectl describe job monitor-test
+
+# Check specific status fields
+kubectl get job monitor-test -o jsonpath='{.status.active}'      # Running pods
+kubectl get job monitor-test -o jsonpath='{.status.succeeded}'   # Completed pods
+kubectl get job monitor-test -o jsonpath='{.status.failed}'      # Failed pods
+kubectl get job monitor-test -o jsonpath='{.status.startTime}'   # When started
+kubectl get job monitor-test -o jsonpath='{.status.completionTime}'  # When finished
+```
+
+### 5. Monitor Events
+```bash
+# Watch events related to the Job
+kubectl get events --field-selector involvedObject.name=monitor-test -w
+
+# Or all events
+kubectl get events -w
+```
+
+### 6. Determine When Job Completes
+```bash
+# Check if Job completed successfully
+kubectl wait --for=condition=complete --timeout=60s job/monitor-test
+
+# Or check for failure
+kubectl wait --for=condition=failed --timeout=60s job/monitor-test
+
+# Get completion status
+kubectl get job monitor-test -o jsonpath='{.status.conditions[?(@.type=="Complete")].status}'
+# Returns: True (if complete)
+```
+
+## Complete Monitoring Script
+
+```bash
+#!/bin/bash
+
+JOB_NAME="monitor-test"
+
+echo "Creating Job..."
+kubectl create job $JOB_NAME \
+  --image=busybox \
+  -- sh -c "for i in 1 2 3 4 5; do echo 'Task $i'; sleep 5; done"
+
+echo "Monitoring Job progress..."
+
+# Watch Job in background
+kubectl get job $JOB_NAME -w &
+WATCH_PID=$!
+
+# Follow logs
+kubectl logs job/$JOB_NAME -f 2>/dev/null &
+LOG_PID=$!
+
+# Wait for completion
+kubectl wait --for=condition=complete --timeout=60s job/$JOB_NAME
+
+# Kill background processes
+kill $WATCH_PID $LOG_PID 2>/dev/null
+
+# Final status
+echo "Job Status:"
+kubectl get job $JOB_NAME
+
+echo "Pod Status:"
+kubectl get pods -l job-name=$JOB_NAME
+```
+
+## Quick Monitoring Commands
+
+```bash
+# One-liner to monitor everything
+kubectl create job test --image=busybox -- sleep 30 && \
+kubectl get job test -w & \
+kubectl logs job/test -f
+
+# Check if complete
+kubectl get job test -o jsonpath='{.status.succeeded}' | grep -q 1 && echo "Complete" || echo "Running"
+
+# Time how long Job takes
+time kubectl wait --for=condition=complete job/test
+```
+
+**Key monitoring points:**
+- Use `-w` flag to watch resources in real-time
+- Use `-f` flag to follow logs
+- Use `kubectl wait` to block until completion
+- Check `.status.succeeded` field for completion count
