@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: health-check
+spec:
+  jobTemplate:
+    metadata:
+      name: health-check
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - command: ["sh", "-c", "wget -O- http://api-service:8080/health"]
+            image: busybox
+            name: health-check
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/5 * * * *'
+status: {}

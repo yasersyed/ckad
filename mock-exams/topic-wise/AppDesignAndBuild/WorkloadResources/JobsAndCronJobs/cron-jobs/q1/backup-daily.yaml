@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-daily
+spec:
+  jobTemplate:
+    metadata:
+      name: backup-daily
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - command: ["sh", "-c", "echo 'Backing up database'"]
+            image: busybox
+            name: backup-daily
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: 0 2 * * *
+status: {}
