@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup
+spec:
+  jobTemplate:
+    metadata:
+      name: db-backup
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: db-backup
+            env:
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: db-credentials
+                    key: password
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: 0 0 * * *
+status: {}

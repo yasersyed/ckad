@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: maintenance-task
+spec:
+  jobTemplate:
+    metadata:
+      name: maintenance-task
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: maintenance-task
+            command: ["sh","-c","commencing maintenance"]
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/15 * * * *'
+status: {}

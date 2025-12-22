@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: time-sensitive
+spec:
+  startingDeadlineSeconds: 30
+  jobTemplate:
+    metadata:
+      name: time-sensitive
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - command: ["sh","-c","echo running"]
+            image: busybox
+            name: time-sensitive
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '* * * * *'
+status: {}

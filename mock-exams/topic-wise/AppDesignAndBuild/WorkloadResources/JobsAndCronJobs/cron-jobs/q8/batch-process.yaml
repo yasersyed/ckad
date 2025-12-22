@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: batch-process
+spec:
+  jobTemplate:
+    metadata:
+      name: batch-process
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: python:3.9
+            name: batch-process
+            command: ["sh","-c", "python process.py"]
+            resources: 
+              requests:
+                cpu: 200m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+          restartPolicy: OnFailure
+  schedule: 0 */6 * * *
+status: {}

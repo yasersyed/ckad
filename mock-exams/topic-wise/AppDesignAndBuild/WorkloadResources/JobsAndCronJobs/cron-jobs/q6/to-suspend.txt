@@ -1,0 +1,3 @@
+k patch cronjob maintenance-task -p '{"spec":{"suspend":true}}
+or
+k edit cronjob maintenance-task

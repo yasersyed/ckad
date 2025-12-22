@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: data-sync
+spec:
+  concurrencyPolicy: Replace
+  jobTemplate:
+    metadata:
+      name: data-sync
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: data-sync
+            command: ["sh","-c","echo 'Synching data'"]
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/10 * * * *'
+status: {}

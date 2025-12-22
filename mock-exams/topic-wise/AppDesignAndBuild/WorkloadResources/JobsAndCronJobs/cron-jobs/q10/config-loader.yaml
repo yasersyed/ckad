@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: config-loader
+spec:
+  jobTemplate:
+    metadata:
+      name: config-loader
+    spec:
+      template:
+        metadata: {}
+        spec:
+          volumes:
+            - name: app-config
+              configMap:
+                name: app-config
+                items:
+                  - key: key
+                    path: settings.conf
+          containers:
+          - image: busybox
+            name: config-loader
+            command: ["sh", "-c", "cat /config/settings.conf"]
+            volumeMounts: 
+            - name: app-config
+              mountPath: /config
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: 0 * * * *
+status: {}

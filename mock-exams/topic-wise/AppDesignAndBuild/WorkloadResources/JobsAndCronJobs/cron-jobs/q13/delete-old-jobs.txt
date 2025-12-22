@@ -1,0 +1,16 @@
+# Assuming CronJob named "backup-db"
+
+# 1. List all Jobs from this CronJob
+kubectl get jobs
+
+# 2. Delete completed Jobs
+kubectl delete jobs --field-selector status.successful=1
+
+# 3. Delete failed Jobs
+kubectl delete jobs --field-selector status.failed=1
+
+# 4. Verify CronJob still exists
+kubectl get cronjob backup-db
+
+# 5. Verify cleanup
+kubectl get jobs
