@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-logs
+spec:
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1 
+  jobTemplate:
+    metadata:
+      name: cleanup-logs
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: cleanup-logs
+            command: ["sh", "-c", "rm -rf /tmp/old-logs"]
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: 0 * * * *
+status: {}
