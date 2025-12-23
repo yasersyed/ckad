@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: backend
+  name: dns-test 
+  namespace: default
+spec:
+  containers:
+  - command: 
+    - sh
+    - -c
+    - |
+      nslookup backend-svc > /tmp/dns-test
+      cat /tmp/dns-test
+      sleep 3600
+    image: busybox
+    name: dns-test 
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
