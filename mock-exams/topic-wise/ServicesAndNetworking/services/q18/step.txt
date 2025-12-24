@@ -1,0 +1,1 @@
+k get svc backend-svc -o jsonpath='{.spec.clusterIP}' > service-ip.tx

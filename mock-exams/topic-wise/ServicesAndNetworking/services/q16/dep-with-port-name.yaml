@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test-dep
+  name: test-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-dep
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: test-dep
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+          - containerPort: 80
+            name: http
+          - containerPort: 443
+            name: https
+        resources: {}
+status: {}
