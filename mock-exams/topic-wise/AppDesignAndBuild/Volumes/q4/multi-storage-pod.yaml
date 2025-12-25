@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: multi-storage
+  name: multi-storage
+spec:
+  volumes:
+    - name: data
+      persistentVolumeClaim: 
+        claimName: data-pvc
+    - name: config
+      persistentVolumeClaim:
+        claimName: config-pvc
+  containers:
+    - image: busybox
+      name: multi-storage
+      command: ["sh", "-c", "sleep 3600"]
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /data
+        name: data
