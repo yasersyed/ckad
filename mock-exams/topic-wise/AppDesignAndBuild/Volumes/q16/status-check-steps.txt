@@ -1,0 +1,7 @@
+1) 
+using -o json you can see all available query options
+k get pvc rwo-pvc -o json
+
+2) 
+using -o jsonPath we can narrow it down to exactly what we want
+k get pvc rwo-pvc -o jsonpath='{.status.phase}

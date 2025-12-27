@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod
+  name: small-pod 
+spec:
+  volumes:
+    - name: storage
+      persistentVolumeClaim: 
+        claimName: small-pvc
+  containers:
+  - image: busybox
+    name: pod
+    command: ["sh","-c","sleep 3600"]
+    volumeMounts:
+      - name: storage
+        mountPath: /data

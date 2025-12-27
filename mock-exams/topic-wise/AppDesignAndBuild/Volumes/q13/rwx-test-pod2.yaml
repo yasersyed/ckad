@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: rwx-test-pod2
+  name: rwx-test-pod2
+spec:
+  volumes:
+    - name: rwx
+      persistentVolumeClaim:
+        claimName: rwx-pvc
+  containers:
+  - image: nginx
+    name: rwx-test-pod2
+    resources: {}
+    volumeMounts:
+    - name: rwx
+      mountPath: /data
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

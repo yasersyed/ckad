@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: abe179bd30017ad294b4cf4802cbed7a7a81d2d90500e5f264ba22e54fc81e94
+    cni.projectcalico.org/podIP: 10.244.120.107/32
+    cni.projectcalico.org/podIPs: 10.244.120.107/32
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"run":"rwo-test-pod1"},"name":"rwo-test-pod1","namespace":"default"},"spec":{"containers":[{"image":"nginx","name":"rwo-test-pod1","resources":{},"volumeMounts":[{"mountPath":"/data","name":"rwo"}]}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","volumes":[{"name":"rwo","persistentVolumeClaim":{"claimName":"rwo-pvc"}}]},"status":{}}
+  creationTimestamp: "2025-12-27T20:11:05Z"
+  generation: 1
+  labels:
+    run: rwo-test-pod1
+  name: rwo-test-pod1
+  namespace: default
+  resourceVersion: "152858"
+  uid: dded5d3a-e1fc-470b-a1a3-fb4e23ccf0f1
+spec:
+  containers:
+  - image: nginx
+    imagePullPolicy: Always
+    name: rwo-test-pod1
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /data/new-path
+      name: rwo
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-lqn9q
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: minikube
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: rwo
+    persistentVolumeClaim:
+      claimName: rwo-pvc
+  - name: kube-api-access-lqn9q
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2025-12-27T20:11:06Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2025-12-27T20:11:05Z"
+    observedGeneration: 1
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2025-12-27T20:11:06Z"
+    observedGeneration: 1
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2025-12-27T20:11:06Z"
+    observedGeneration: 1
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2025-12-27T20:11:05Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://623fa7ca14cad2505e29347938657c01bfed040f60f5aa3f2869a4a471c74843
+    image: nginx:latest
+    imageID: docker-pullable://nginx@sha256:325b00a35073d9aa1d3df16da8afbbae1ac7d824c505f7490cd5cdbb79d60f6d
+    lastState: {}
+    name: rwo-test-pod1
+    ready: true
+    resources: {}
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2025-12-27T20:11:06Z"
+    volumeMounts:
+    - mountPath: /data
+      name: rwo
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-lqn9q
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 192.168.39.253
+  hostIPs:
+  - ip: 192.168.39.253
+  observedGeneration: 1
+  phase: Running
+  podIP: 10.244.120.107
+  podIPs:
+  - ip: 10.244.120.107
+  qosClass: BestEffort
+  startTime: "2025-12-27T20:11:05Z"

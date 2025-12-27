@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  password: cGFzczEyMw==
+  username: dGVzdA==
+kind: Secret
+metadata:
+  name: db-creds

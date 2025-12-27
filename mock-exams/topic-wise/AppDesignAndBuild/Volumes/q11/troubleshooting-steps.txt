@@ -1,0 +1,323 @@
+# Answer to Question 11: Detailed Troubleshooting
+
+## Scenario 1: StorageClass Doesn't Exist
+
+### Create PVC with Non-Existent StorageClass
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: fast-ssd  # Doesn't exist
+  resources:
+    requests:
+      storage: 5Gi
+```
+
+### Create Pod
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: storage-claim
+```
+
+### Troubleshoot
+```bash
+# Pod stuck in Pending
+kubectl get pod app-pod
+# STATUS: Pending
+
+# Check events
+kubectl describe pod app-pod
+# Events: "waiting for persistent volume claim to be bound"
+
+# Check PVC
+kubectl get pvc storage-claim
+# STATUS: Pending
+
+# Describe PVC - shows the issue
+kubectl describe pvc storage-claim
+# Events: storageclass.storage.k8s.io "fast-ssd" not found
+
+# List available StorageClasses
+kubectl get sc
+
+# Fix: Use existing StorageClass or remove storageClassName
+kubectl delete pvc storage-claim
+```
+
+---
+
+## Scenario 2: No Available PV
+
+### Create PVC Requesting Large Storage
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi  # No PV has this much
+```
+
+### Troubleshoot
+```bash
+# Check PVC status
+kubectl get pvc storage-claim
+# STATUS: Pending
+
+# Describe PVC
+kubectl describe pvc storage-claim
+# Events: "no persistent volumes available for this claim"
+
+# Check available PVs
+kubectl get pv
+# Shows available PVs with their sizes
+
+# Check if any PV matches
+kubectl get pv -o custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage,STATUS:.status.phase,CLAIM:.spec.claimRef.name
+
+# Fix: Reduce storage request or create matching PV
+kubectl delete pvc storage-claim
+```
+
+---
+
+## Scenario 3: Access Mode Mismatch
+
+### Create PVC with ReadWriteMany
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-claim
+spec:
+  accessModes:
+  - ReadWriteMany  # No PV supports this
+  resources:
+    requests:
+      storage: 5Gi
+```
+
+### Troubleshoot
+```bash
+# Check PVC
+kubectl describe pvc storage-claim
+# Events: "no persistent volumes available"
+
+# Check available PVs and their access modes
+kubectl get pv -o custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage,ACCESS:.spec.accessModes
+
+# Output shows:
+# NAME    CAPACITY   ACCESS
+# pv-1    10Gi       [ReadWriteOnce]
+# pv-2    5Gi        [ReadWriteOnce]
+
+# Fix: Change PVC to ReadWriteOnce
+kubectl delete pvc storage-claim
+```
+
+---
+
+## Scenario 4: Selector Mismatch
+
+### Create PVC with Label Selector
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  selector:
+    matchLabels:
+      type: fast  # No PV has this label
+```
+
+### Troubleshoot
+```bash
+# Describe PVC
+kubectl describe pvc storage-claim
+# Events: "no persistent volumes available"
+
+# Check PV labels
+kubectl get pv --show-labels
+
+# Fix: Remove selector or add label to PV
+kubectl delete pvc storage-claim
+```
+
+---
+
+## Complete Troubleshooting Workflow
+
+```bash
+# 1. Check pod status
+kubectl get pod app-pod
+# Look for: Pending, ContainerCreating
+
+# 2. Describe pod for events
+kubectl describe pod app-pod | grep -A 10 Events
+# Common messages:
+# - "waiting for volume to be created"
+# - "persistentvolumeclaim not bound"
+
+# 3. Check PVC status
+kubectl get pvc storage-claim
+# Possible statuses: Pending, Bound, Lost
+
+# 4. Describe PVC for detailed info
+kubectl describe pvc storage-claim
+# Look for:
+# - Status: Pending/Bound
+# - Events section (shows errors)
+# - Used By: (which pod is using it)
+
+# 5. Check available PVs
+kubectl get pv
+# Look for:
+# - Available PVs (STATUS: Available)
+# - Capacity matches request
+# - Access modes match
+
+# 6. Check PV details
+kubectl get pv -o yaml | grep -A 5 -E 'capacity|accessModes|storageClassName'
+
+# 7. Check StorageClass
+kubectl get sc
+kubectl describe sc <storage-class-name>
+
+# 8. Check Events
+kubectl get events --sort-by='.lastTimestamp' | grep storage-claim
+```
+
+---
+
+## Common Issues and Fixes
+
+### Issue 1: StorageClass Not Found
+```bash
+# Error: storageclass.storage.k8s.io "xxx" not found
+
+# List available StorageClasses
+kubectl get sc
+
+# Fix: Update PVC to use existing SC
+kubectl edit pvc storage-claim
+# Change storageClassName to existing one
+
+# Or remove storageClassName to use default
+```
+
+### Issue 2: Insufficient Capacity
+```bash
+# Error: no persistent volumes available
+
+# Check PV capacities
+kubectl get pv -o custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage,STATUS:.status.phase
+
+# Fix: Reduce PVC storage request
+kubectl delete pvc storage-claim
+# Edit YAML to smaller size
+kubectl apply -f pvc.yaml
+```
+
+### Issue 3: Access Mode Not Supported
+```bash
+# Check what PVs support
+kubectl get pv -o custom-columns=NAME:.metadata.name,ACCESS:.spec.accessModes
+
+# Fix: Change PVC access mode
+kubectl delete pvc storage-claim
+# Edit YAML to supported access mode
+kubectl apply -f pvc.yaml
+```
+
+### Issue 4: Dynamic Provisioning Failed
+```bash
+# Check StorageClass provisioner
+kubectl describe sc <storage-class-name>
+
+# Check provisioner pods (e.g., ebs-csi-controller)
+kubectl get pods -n kube-system | grep provisioner
+
+# Check events for provisioner errors
+kubectl get events -n kube-system --sort-by='.lastTimestamp'
+```
+
+---
+
+## Quick Debug Commands
+
+```bash
+# All-in-one status check
+kubectl get pvc,pv,sc
+
+# Detailed PVC info
+kubectl get pvc storage-claim -o yaml
+
+# Events for specific PVC
+kubectl get events --field-selector involvedObject.name=storage-claim
+
+# Check which pods use PVC
+kubectl get pods -o json | jq '.items[] | select(.spec.volumes[]?.persistentVolumeClaim.claimName=="storage-claim") | .metadata.name'
+```
+
+---
+
+## Example Fix Workflow
+
+```bash
+# 1. Identify issue
+kubectl describe pvc storage-claim
+# Output: "storageclass.storage.k8s.io "fast-ssd" not found"
+
+# 2. Check available options
+kubectl get sc
+
+# 3. Delete PVC
+kubectl delete pvc storage-claim
+
+# 4. Update YAML with correct StorageClass
+vim pvc.yaml
+# Change: storageClassName: standard
+
+# 5. Recreate PVC
+kubectl apply -f pvc.yaml
+
+# 6. Verify binding
+kubectl get pvc storage-claim
+# STATUS: Bound
+
+# 7. Check pod
+kubectl get pod app-pod
+# STATUS: Running
+
+# 8. Verify mount
+kubectl exec app-pod -- df -h | grep /data
+```
+
+This covers the most common PVC binding issues you'll encounter in CKAD!

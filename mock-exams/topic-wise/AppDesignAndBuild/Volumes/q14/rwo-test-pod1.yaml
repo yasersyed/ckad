@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: rwo-test-pod1
+  name: rwo-test-pod1
+spec:
+  volumes:
+    - name: rwo
+      persistentVolumeClaim:
+        claimName: rwo-pvc
+  containers:
+  - image: nginx
+    name: rwo-test-pod1
+    resources: {}
+    volumeMounts:
+    - name: rwo
+      mountPath: /data
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
