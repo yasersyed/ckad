@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: shared-pod
+  name: shared-pod
+spec:
+  containers:
+  - image: busybox
+    name: writer
+    command: ["sh","-c", "while true; do echo $(date) >> /data/logs.txt; sleep 5; done"]
+    volumeMounts:
+      - name: shared-data
+        mountPath: /data
+  - image: busybox
+    name: reader
+    command: ["sh", "-c", "while true; do cat /data/logs.txt; sleep 10; done"]
+    volumeMounts:
+      - name: shared-data
+        mountPath: /data
+    resources: {}
+  volumes:
+    - name: shared-data
+      emptyDir: {}
