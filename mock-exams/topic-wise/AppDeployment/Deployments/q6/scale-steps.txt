@@ -1,0 +1,2 @@
+k scale deployment webapp --replicas=5
+

@@ -1,0 +1,13 @@
+# create and deploy
+k create deployment staging-app --image=nginx:1.23 --replicas=3 --dry-run=client -o yaml > staging-app.yaml
+vim staging-app.yaml
+k apply -f staging-app.yaml
+
+# pause rollout
+k rollout pause deployment/staging-app
+
+# edit deployment
+k edit deployment/staging-app
+
+# resume rollout
+k rollout resume deployment/staging-ap

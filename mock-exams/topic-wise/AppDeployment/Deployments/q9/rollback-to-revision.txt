@@ -1,0 +1,2 @@
+# Roll back to deployment revision 3
+  kubectl rollout undo deployment/frontend --to-revision=3

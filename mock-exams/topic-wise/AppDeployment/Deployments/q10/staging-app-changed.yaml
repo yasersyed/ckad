@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: staging-app
+  name: staging-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: staging-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: staging-app
+    spec:
+      containers:
+      - image: nginx:1.23
+        name: nginx
+        ports:
+          - containerPort: 80
+        resources: {}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+status: {}

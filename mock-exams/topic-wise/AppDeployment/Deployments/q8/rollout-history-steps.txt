@@ -1,0 +1,5 @@
+k set image deployments backend-app nginx=nginx:1.2
+k rollout history deployment/backend-app
+we can also annotate with this command
+k annotate deployment/backend-app kubernetes.io/change-cause='image updated to 1.24'
+k rollout history deployment/backend-app
