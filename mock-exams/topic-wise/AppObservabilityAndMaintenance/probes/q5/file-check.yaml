@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: file-check
+  name: file-check
+spec:
+  containers:
+  - image: busybox
+    name: file-check
+    command: ["sh","-c","sleep 10 && touch /tmp/healthy && sleep 3600"]
+    livenessProbe:
+      exec:
+        command:
+          - cat
+          - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

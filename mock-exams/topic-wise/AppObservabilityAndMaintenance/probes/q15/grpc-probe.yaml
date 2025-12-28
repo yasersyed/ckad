@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: grpc-probe
+  name: grpc-probe
+spec:
+  containers:
+  - image: hashicorp/http-echo
+    name: grpc-probe
+    args:
+      - -text=grpc server
+      - -listen=:9090
+    ports:
+    - containerPort: 9090
+    livenessProbe:
+      grpc:
+        port: 9090
+      initialDelaySeconds: 10
+      periodSeconds: 5
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

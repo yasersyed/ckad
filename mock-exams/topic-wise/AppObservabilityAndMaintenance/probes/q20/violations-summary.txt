@@ -1,0 +1,7 @@
+Summary of Best Practices Violated
+❌ Liveness checks external dependencies (database)
+❌ failureThreshold: 1 (no tolerance for failures)
+❌ Too aggressive timing (3s period, 1s timeout)
+❌ Startup time too short (10s total)
+❌ Wrong probe mechanism (exec curl vs httpGet)
+❌ Paths/ports don't match actual app

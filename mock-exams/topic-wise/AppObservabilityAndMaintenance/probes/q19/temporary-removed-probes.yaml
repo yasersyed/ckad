@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: temporary
+  name: temporary
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: temporary
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: temporary
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}

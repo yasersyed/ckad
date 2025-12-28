@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  containers:
+  - name: web
+    image: nginx
+    ports:
+    - containerPort: 80              # ✅ Fixed
+    startupProbe:
+      httpGet:
+        path: /                       # ✅ Fixed
+        port: 80                      # ✅ Fixed
+      periodSeconds: 10               # ✅ More reasonable
+      failureThreshold: 12            # ✅ Allows 120s startup
+    livenessProbe:
+      httpGet:
+        path: /                       # ✅ Fixed
+        port: 80                      # ✅ Fixed
+      initialDelaySeconds: 10         # ✅ Better delay
+      periodSeconds: 10               # ✅ Less frequent
+      timeoutSeconds: 5               # ✅ More tolerant
+      failureThreshold: 3             # ✅ Standard value
+    readinessProbe:
+      httpGet:                        # ✅ Use HTTP not exec
+        path: /                       # ✅ Fixed
+        port: 80                      # ✅ Fixed
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    resources:                        # ✅ Added
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

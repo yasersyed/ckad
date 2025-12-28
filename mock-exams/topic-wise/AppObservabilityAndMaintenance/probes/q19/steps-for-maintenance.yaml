@@ -1,0 +1,14 @@
+1) scaled down the deployments 
+k scale --replicas=0 deployments/temporary
+2) made a copy
+cp temporary.yaml temporary-removed-probes.yaml
+3) removed probes in the copy and created the pods
+vim temporary-removed-probes.yaml
+k apply -f temporary-removed-probes.yaml
+k get pods
+k get pods -w
+4) scaled down the deployements again
+k scale --replicas=0 deployments/temporary
+5) created using original yaml file
+k apply -f temporary.yaml
+k get pods
