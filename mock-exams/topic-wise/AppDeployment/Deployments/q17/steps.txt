@@ -1,0 +1,4 @@
+Its just rollout undo with a fancy name
+1) k rollout undo deployment critical-app
+2) k rollout status deployment critical-app
+3) k rollout history deployment critical-app

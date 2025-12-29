@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: canary-stable
+  name: canary-stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: canary
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: canary
+        version: stable
+    spec:
+      containers:
+      - image: nginx:1.23
+        name: nginx
+        resources: {}
+status: {}

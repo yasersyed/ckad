@@ -1,0 +1,3 @@
+k set image deployment app-server nginx=nginx:1.25
+k scale deployment app-server --replicas=4
+k set env deployment app-server ENV=production

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: database-app
+  name: database-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database-app
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: database-app
+    spec:
+      containers:
+      - image: postgres:15
+        name: postgres
+        resources: {}
+status: {}
