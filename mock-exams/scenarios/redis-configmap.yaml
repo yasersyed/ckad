@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  maxmemory: 2mb
+  maxmemory-policy: allkeys-lru
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2026-01-01T20:49:36Z"
+  name: redis-config
+  namespace: default
+  resourceVersion: "12266"
+  uid: 6d813612-9d86-40a7-b2ca-264357cb765f
