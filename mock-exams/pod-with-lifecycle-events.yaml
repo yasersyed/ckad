@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+  namespace: session283884
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    lifecycle:
+      preStop:
+        exec:
+          command: ["/bin/sh","-c","sleep 10"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}

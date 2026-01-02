@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: game-pod
+  name: game-pod
+spec:
+  volumes:
+  - name: game-config-vol
+    configMap:
+      name: game-config
+  containers:
+  - image: nginx
+    name: game-pod
+    volumeMounts:
+    - name: game-config-vol
+      mountPath: /etc/config
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
